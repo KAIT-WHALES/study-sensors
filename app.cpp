@@ -83,7 +83,7 @@ void HardwareCalibration() {
     if (g_button.isCenterPressed()) {
       while (g_button.isCenterPressed()) {}
       _sensor = static_cast<Sensor>(currentIdx%3);
-      fprintf(fp, "「%s」が選択されました。\n", ESensorToString(_sensor));
+      fprintf(fp, "「%s」が選択されました。\n", ESensorToString(_sensor).c_str());
       break;
     }
   }
@@ -95,9 +95,7 @@ void main_task(intptr_t unused) {
   SerialCalibration();
   g_display.showChar('E'); // End
 
-  g_display.showChar('S'); // Sensor
   HardwareCalibration();
-  g_display.showChar('E'); // End
 
   // フォースセンサのボタンが押されるまで待機
   fprintf(fp, "フォースセンサを押してください\n");
