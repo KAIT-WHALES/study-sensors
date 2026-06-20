@@ -12,6 +12,7 @@
 #include <libcpp/spike/Display.h>
 #include <libcpp/spike/ForceSensor.h>
 #include <libcpp/spike/ColorSensor.h>
+#include <libcpp/spike/UltrasonicSensor.h>
 #include <libcpp/spike/Button.h>
 #include <libcpp/spike/Clock.h>
 #include <libcpp/spike/Motor.h>
@@ -33,6 +34,8 @@ namespace {
   Display g_display;
   ForceSensor g_forceSensor(EPort::PORT_D);
   ColorSensor g_colorSensor(EPort::PORT_E);
+  UltrasonicSensor g_ultraSonic(EPort::PORT_F);
+  IMU g_imu;
   Button g_button;
   FILE *fp;
   Sensor _sensor(Sensor::ColorSensor);
