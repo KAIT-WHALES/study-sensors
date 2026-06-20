@@ -46,6 +46,7 @@ std::string ESensorToString(Sensor sensor) {
     case Sensor::ColorSensor: return "カラーセンサ";
     case Sensor::IMU: return "ジャイロセンサ";
     case Sensor::UltraSonic: return "超音波センサ";
+    default: return "カラーセンサ";
   }
 }
 
@@ -54,6 +55,7 @@ char ESensorToChar(Sensor sensor) {
     case Sensor::ColorSensor: return 'C';
     case Sensor::IMU: return 'I';
     case Sensor::UltraSonic: return 'U';
+    default: return 'C';
   }
 }
 
@@ -70,7 +72,7 @@ void SerialCalibration() {
 
 void HardwareCalibration() {
   fprintf(fp, "使いたいセンサを選択してください(左右ボタンで切り替え、中央ボタンで決定)\n");
-  fprintf(fp, "C:カラーセンサ, I:ジャイロセンサ, U:超音波センサ\n");
+  fprintf(fp, "C:カラーセンサ / I:ジャイロセンサ / U:超音波センサ\n");
   int currentIdx = 0;
   std::string currentSensor = ESensorToString(_sensor);
   while (1) {
