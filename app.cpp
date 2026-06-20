@@ -118,5 +118,23 @@ void tracer_task(intptr_t unused) {
     stp_cyc(TRACER_TASK_CYC);
   }
 
+  switch (_sensor) {
+    case Sensor::ColorSensor:
+      ColorSensor::HSV hsv;
+      g_colorSensor.getHSV(hsv);
+      fprintf(fp, "h = %d, s = %d, v = %d\n", hsv.h, hsv.s, hsv.v);
+      break;
+    case Sensor::IMU:
+      float heading;
+      heading = g_imu.getHeading();
+      fprintf(fp, "now_heading = %.2f\n", heading);
+      break;
+    case Sensor::UltraSonic:
+      int32_t distance;
+      distance = g_ultraSonic.getDistance();
+      fprintf(fp, "distance = %ld\n", distance);
+      break;
+  }
+
   ext_tsk();
 }
