@@ -75,6 +75,7 @@ void HardwareCalibration() {
   fprintf(fp, "C:カラーセンサ / I:ジャイロセンサ / U:超音波センサ\n");
   int currentIdx = 0;
   std::string currentSensor = ESensorToString(_sensor);
+  g_imu.setTilt(51.0f);
   while (1) {
     if (g_button.isRightPressed()) {
       while (g_button.isRightPressed()) {}
@@ -91,6 +92,7 @@ void HardwareCalibration() {
       fprintf(fp, "「%s」が選択されました。\n", ESensorToString(_sensor).c_str());
       break;
     }
+    dly_tsk(10);
   }
 }
 
@@ -109,6 +111,7 @@ void main_task(intptr_t unused) {
       while (g_forceSensor.isTouched()) { }
       break;
     }
+    dly_tsk(10);
   } 
   fprintf(fp, "フォースセンサが押されました。\n");
   sta_cyc(TRACER_TASK_CYC); 
@@ -121,21 +124,24 @@ void tracer_task(intptr_t unused) {
   }
 
   switch (_sensor) {
-    case Sensor::ColorSensor:
+    case Sensor::ColorSensor: {
       ColorSensor::HSV hsv;
       g_colorSensor.getHSV(hsv);
       fprintf(fp, "h = %d, s = %d, v = %d\n", hsv.h, hsv.s, hsv.v);
       break;
-    case Sensor::IMU:
+    }
+    case Sensor::IMU: {
       float heading;
       heading = g_imu.getHeading();
-      fprintf(fp, "now_heading = %.2f\n", heading);
+      fprintf(fp, "now_heading = %.4f\n", heading);
       break;
-    case Sensor::UltraSonic:
+    }
+    case Sensor::UltraSonic: {
       int32_t distance;
       distance = g_ultraSonic.getDistance();
       fprintf(fp, "distance = %ld\n", distance);
       break;
+    }
   }
 
   ext_tsk();
