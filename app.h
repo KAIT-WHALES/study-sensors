@@ -9,10 +9,10 @@ extern "C" {
 /* タスク優先度 */
 #define MAIN_PRIORITY    5 /* メインタスク */
 #define TRACER_PRIORITY  6 /* ライントレーサータスク */
-#define CALIBRATION_PRIORITY 5
+#define CALIBRATION_PRIORITY 7
 
 /* タスク周期の定義 */
-#define TRACER_PERIOD  (20 * 1000) /* トラッキングタスク:8msec周期 */
+#define TRACER_PERIOD  (100 * 1000) /* トラッキングタスク:100msec周期（BT送信に余裕を持たせる） */
 
 
 #ifndef STACK_SIZE
