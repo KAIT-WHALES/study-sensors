@@ -121,6 +121,9 @@ void main_task(intptr_t unused) {
 void tracer_task(intptr_t unused) {
   if (g_forceSensor.isPressed(0.5f)) {
     stp_cyc(TRACER_TASK_CYC);
+    act_tsk(CALIBRATION_TASK);
+    ext_tsk();
+    return;
   }
 
   switch (_sensor) {
@@ -144,5 +147,23 @@ void tracer_task(intptr_t unused) {
     }
   }
 
+  ext_tsk();
+}
+
+void calibration_task(intptr_t unused) {
+  fprintf(fp, "=====再キャリブレーションを開始します。=====\n");
+
+  HardwareCalibration();
+
+  fprintf(fp, "フォースセンサを押してください\n");
+  while(1) {
+    if (g_forceSensor.isPressed(0.5f)) {
+      while (g_forceSensor.isTouched()) { }
+      break;
+    }
+    dly_tsk(10);
+  }
+  fprintf(fp, "フォースセンサが押されました。\n");
+  sta_cyc(TRACER_TASK_CYC);
   ext_tsk();
 }
