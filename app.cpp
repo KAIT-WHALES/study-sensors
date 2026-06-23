@@ -126,25 +126,34 @@ void tracer_task(intptr_t unused) {
     return;
   }
 
+  // NOTE: fprintf は Bluetooth 送信待ち（セマフォ待ち）でブロックするため
+  //       周期タスクから呼ぶと送信完了前に次の周期が来てタスクが積み上がりcrashする。
+  //       snprintf でRAMにフォーマットしてから serial_wri_dat で送ることで
+  //       ブロッキング時間を最小限に抑える。
+  char buf[64];
+  int len = 0;
+
   switch (_sensor) {
     case Sensor::ColorSensor: {
       ColorSensor::HSV hsv;
       g_colorSensor.getHSV(hsv);
-      fprintf(fp, "h = %d, s = %d, v = %d\n", hsv.h, hsv.s, hsv.v);
+      len = snprintf(buf, sizeof(buf), "h=%d,s=%d,v=%d\n", hsv.h, hsv.s, hsv.v);
       break;
     }
     case Sensor::IMU: {
-      float heading;
-      heading = g_imu.getHeading();
-      fprintf(fp, "now_heading = %.4f\n", heading);
+      float heading = g_imu.getHeading();
+      len = snprintf(buf, sizeof(buf), "heading=%.2f\n", heading);
       break;
     }
     case Sensor::UltraSonic: {
-      int32_t distance;
-      distance = g_ultraSonic.getDistance();
-      fprintf(fp, "distance = %ld\n", distance);
+      int32_t distance = g_ultraSonic.getDistance();
+      len = snprintf(buf, sizeof(buf), "dist=%ld\n", distance);
       break;
     }
+  }
+
+  if (len > 0) {
+    serial_wri_dat(SIO_BLUETOOTH_PORTID, buf, len);
   }
 
   ext_tsk();
