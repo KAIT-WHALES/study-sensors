@@ -12,7 +12,7 @@ extern "C" {
 #define CALIBRATION_PRIORITY 6
 
 /* タスク周期の定義 */
-#define TRACER_PERIOD  (20 * 1000) /* トラッキングタスク:20msec周期
+#define TRACER_PERIOD  (20 * 1000) /* トラッキングタスク:20msec周期 */
 
 
 #ifndef STACK_SIZE
